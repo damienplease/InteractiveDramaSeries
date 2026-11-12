@@ -6,8 +6,8 @@ A GitHub-ready, static interactive theatre project inspired by Ola Rotimi's play
 1. Download or clone this repository.
 2. Open `index.html` in a modern browser.
 3. Click **Enter the story**.
-4. Each chapter runs for five minutes, then pauses and presents three choices.
-5. Choices affect later scene text, character/kingdom themes and the final ending. Progress is saved in the browser's local storage.
+4. The story has 12 chapters. Each chapter runs for five minutes, then pauses and presents three choices (about 60 minutes total).
+5. Choices affect later scene text, unlock some alternative responses, build character/kingdom themes and influence the final ending. Progress is saved in the browser's local storage.
 
 ### Test mode
 For quick testing, add `?test=1` to the URL, for example:
