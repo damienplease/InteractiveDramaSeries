@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17120f">
+  <meta name="description" content="An interactive theatrical experience inspired by Ola Rotimi's The Gods Are Not to Blame.">
+  <title>The Gods Are Not to Blame — An Interactive Theatre Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="grain"></div>
+  <header class="topbar">
+    <a class="brand" href="#" id="brandHome"><span class="brand-mark">T</span><span>THEATRE<span class="brand-dot">/</span>LAB</span></a>
+    <div class="top-meta"><span class="live-dot"></span> INTERACTIVE THEATRE <span class="meta-divider">·</span> INSPIRED BY OLA ROTIMI</div>
+    <div class="top-actions">
+      <button class="icon-button" id="audioToggle" type="button" aria-pressed="false" title="Toggle ambient sound">♫ <span>Sound off</span></button>
+      <button class="icon-button" id="voiceToggle" type="button" aria-pressed="false" title="Toggle spoken narration">◖ <span>Voice off</span></button>
+      <button class="quiet-button" id="restartTop" type="button">Restart ↗</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="intro">
+      <div class="hero-copy">
+        <p class="eyebrow">A CHOICE-DRIVEN THEATRICAL EXPERIENCE</p>
+        <h1>The Gods Are<br><em>Not to Blame.</em></h1>
+        <p class="hero-sub">A prophecy. A kingdom. A truth waiting to be uncovered.</p>
+        <p class="hero-body">Enter a reimagined story inspired by Ola Rotimi’s tragedy. You will encounter difficult decisions, hear different perspectives and shape the path toward the final reckoning.</p>
+        <div class="hero-actions">
+          <button class="primary-button" id="beginButton" type="button">Enter the story <span>→</span></button>
+          <span class="runtime">ABOUT 30 MINUTES <i></i> 6 CHAPTERS</span>
+        </div>
+        <div class="intro-notes"><span>HEADPHONES RECOMMENDED</span><span>YOUR CHOICES SHAPE THIS VERSION</span></div>
+        <p class="disclaimer">An original educational adaptation inspired by the play. This project does not reproduce Ola Rotimi’s script or dialogue.</p>
+      </div>
+      <div class="hero-art" aria-label="Abstract theatrical artwork">
+        <div class="sun"></div><div class="arch arch-back"></div><div class="arch arch-front"></div>
+        <div class="figure figure-one"></div><div class="figure figure-two"></div>
+        <div class="art-caption"><span>01 / 06</span><span>THE PROPHECY</span></div>
+      </div>
+    </section>
+
+    <section class="story hidden" id="story">
+      <aside class="story-sidebar">
+        <p class="eyebrow">YOUR JOURNEY</p>
+        <div class="chapter-list" id="chapterList"></div>
+        <div class="sidebar-bottom">
+          <div class="sidebar-note"><span class="live-dot"></span><span>Your progress is saved on this device.</span></div>
+          <button class="text-button" id="resetProgress" type="button">Reset saved progress</button>
+        </div>
+      </aside>
+      <article class="scene-panel" id="scenePanel">
+        <div class="scene-topline"><span id="chapterLabel">CHAPTER 01 / 06</span><span id="sceneStatus">THE STORY BEGINS</span></div>
+        <div class="scene-progress"><span id="progressBar"></span></div>
+        <div class="scene-content" id="sceneContent"></div>
+        <div class="choice-area hidden" id="choiceArea">
+          <div class="choice-heading"><span class="choice-kicker">THE MOMENT OF DECISION</span><span class="choice-timer">THE CLOCK PAUSES HERE</span></div>
+          <h3 id="choiceQuestion">What should happen next?</h3>
+          <div class="choices" id="choices"></div>
+        </div>
+        <div class="scene-footer">
+          <div class="timer-wrap"><span class="timer-label">TIME IN THIS CHAPTER</span><strong id="timer">05:00</strong><span class="timer-hint" id="timerHint">A decision appears when the chapter ends.</span></div>
+          <div class="footer-actions"><span class="autosave" id="saveStatus">PROGRESS SAVED LOCALLY</span><button class="secondary-button hidden" id="continueButton" type="button">Continue →</button></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="ending hidden" id="ending">
+      <p class="eyebrow">YOUR STORY HAS REACHED ITS CONCLUSION</p>
+      <h2 id="endingTitle">The final reckoning.</h2>
+      <p class="ending-copy" id="endingCopy"></p>
+      <div class="ending-grid">
+        <div class="reflection">
+          <span class="choice-kicker">A QUESTION FOR THE AUDIENCE</span>
+          <p id="reflectionQuestion"></p>
+        </div>
+        <div class="report">
+          <span class="choice-kicker">YOUR STORY PROFILE</span>
+          <div id="storyProfile"></div>
+        </div>
+      </div>
+      <div class="report-actions"><button class="secondary-button" id="showChoices" type="button">Review all decisions</button><button class="secondary-button" id="downloadReport" type="button">Download my story report ↓</button></div>
+      <div class="decision-review hidden" id="decisionReview"></div>
+      <div class="ending-actions"><button class="primary-button" id="playAgain" type="button">Experience another path →</button></div>
+      <p class="disclaimer ending-disclaimer">Your report is generated from the choices made in this browser. It is not a judgement of the audience or the characters.</p>
+    </section>
+  </main>
+
+  <footer><span>THEATRE/LAB</span><span>AN INTERACTIVE CLASSROOM PROJECT</span><span>© YOUR CAS PROJECT</span></footer>
+  <script src="script.js"></script>
+</body>
+</html>
