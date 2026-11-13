@@ -4,10 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17120f">
-  <meta property="og:title" content="The Gods Are Not to Blame — An Interactive Theatre Experience">
-  <meta property="og:description" content="Make the choices. Shape the ending. An interactive story inspired by Ola Rotimi's tragedy.">
-  <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2317120f'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23c59a5a' font-family='serif'%3ET%3C/text%3E%3C/svg%3E">
   <meta name="description" content="An interactive theatrical experience inspired by Ola Rotimi's The Gods Are Not to Blame.">
   <title>The Gods Are Not to Blame — An Interactive Theatre Experience</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,8 +12,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="grain" aria-hidden="true"></div>
+  <div class="grain"></div>
   <header class="topbar">
     <a class="brand" href="#" id="brandHome"><span class="brand-mark">T</span><span>THEATRE<span class="brand-dot">/</span>LAB</span></a>
     <div class="top-meta"><span class="live-dot"></span> INTERACTIVE THEATRE <span class="meta-divider">·</span> INSPIRED BY OLA ROTIMI</div>
@@ -28,8 +23,7 @@
     </div>
   </header>
 
-  <main id="main">
-    <noscript><p class="disclaimer">This interactive story needs JavaScript. Please enable it to continue.</p></noscript>
+  <main>
     <section class="hero" id="intro">
       <div class="hero-copy">
         <p class="eyebrow">A CHOICE-DRIVEN THEATRICAL EXPERIENCE</p>
@@ -38,15 +32,15 @@
         <p class="hero-body">Enter a reimagined story inspired by Ola Rotimi’s tragedy. You will encounter difficult decisions, hear different perspectives and shape the path toward the final reckoning.</p>
         <div class="hero-actions">
           <button class="primary-button" id="beginButton" type="button">Enter the story <span>→</span></button>
-          <span class="runtime">ABOUT 36 MINUTES <i></i> 12 CHAPTERS</span>
+          <span class="runtime">ABOUT 60 MINUTES <i></i> 12 CHAPTERS</span>
         </div>
         <div class="intro-notes"><span>HEADPHONES RECOMMENDED</span><span>YOUR CHOICES SHAPE THIS VERSION</span></div>
         <p class="disclaimer">An original educational adaptation inspired by the play. This project does not reproduce Ola Rotimi’s script or dialogue.</p>
       </div>
-      <div class="hero-art" role="img" aria-label="Abstract theatrical artwork">
+      <div class="hero-art" aria-label="Abstract theatrical artwork">
         <div class="sun"></div><div class="arch arch-back"></div><div class="arch arch-front"></div>
         <div class="figure figure-one"></div><div class="figure figure-two"></div>
-        <div class="art-caption"><span>ACT I</span><span>THE PROPHECY</span></div>
+        <div class="art-caption"><span>01 / 06</span><span>THE PROPHECY</span></div>
       </div>
     </section>
 
@@ -60,17 +54,17 @@
         </div>
       </aside>
       <article class="scene-panel" id="scenePanel">
-        <div class="scene-topline"><span id="chapterLabel">CHAPTER 01 / 12</span><span id="sceneStatus" aria-live="polite">THE STORY BEGINS</span></div>
+        <div class="scene-topline"><span id="chapterLabel">CHAPTER 01 / 12</span><span id="sceneStatus">THE STORY BEGINS</span></div>
         <div class="scene-progress"><span id="progressBar"></span></div>
         <div class="scene-content" id="sceneContent"></div>
         <div class="choice-area hidden" id="choiceArea">
           <div class="choice-heading"><span class="choice-kicker">THE MOMENT OF DECISION</span><span class="choice-timer">THE CLOCK PAUSES HERE</span></div>
-          <h3 id="choiceQuestion" tabindex="-1">What should happen next?</h3>
+          <h3 id="choiceQuestion">What should happen next?</h3>
           <div class="choices" id="choices"></div>
         </div>
         <div class="scene-footer">
-          <div class="timer-wrap"><span class="timer-label">TIME IN THIS CHAPTER</span><strong id="timer">03:00</strong><span class="timer-hint" id="timerHint">A decision appears when the chapter ends.</span></div>
-          <div class="footer-actions"><span class="autosave" id="saveStatus">PROGRESS SAVED LOCALLY</span><button class="secondary-button" id="pauseButton" type="button">Pause</button><button class="secondary-button" id="readyButton" type="button">Skip to decision →</button><button class="secondary-button hidden" id="continueButton" type="button">Continue →</button></div>
+          <div class="timer-wrap"><span class="timer-label">TIME IN THIS CHAPTER</span><strong id="timer">03:00</strong><span class="timer-hint" id="timerHint">A decision appears after 3 minutes, or when you skip.</span></div>
+          <div class="footer-actions"><span class="autosave" id="saveStatus">PROGRESS SAVED LOCALLY</span><button class="secondary-button" id="skipButton" type="button">Skip to decision →</button><button class="secondary-button hidden" id="continueButton" type="button">Continue →</button></div>
         </div>
       </article>
     </section>

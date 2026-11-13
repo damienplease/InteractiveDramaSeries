@@ -6,14 +6,14 @@ A GitHub-ready, static interactive theatre project inspired by Ola Rotimi's play
 1. Download or clone this repository.
 2. Open `index.html` in a modern browser.
 3. Click **Enter the story**.
-4. The story has 12 chapters. Each chapter runs for three minutes (or until the reader skips ahead), then pauses and presents three choices (about 36 minutes total).
+4. The story has 12 chapters. Each chapter runs for three-minutes, then pauses and presents three choices (about 60 minutes total).
 5. Choices affect later scene text, unlock some alternative responses, build character/kingdom themes and influence the final ending. Progress is saved in the browser's local storage.
 
 ### Test mode
 For quick testing, add `?test=1` to the URL, for example:
 `http://localhost:8000/?test=1`
 
-Test mode uses 15-second chapters. Remove `?test=1` to restore the five-minute experience.
+Test mode uses 15-second chapters. Remove `?test=1` to restore the three-minute experience.
 
 ## Publish with GitHub Pages
 1. Create a new GitHub repository (for example, `interactive-theatre-gods-not-to-blame`).
@@ -34,7 +34,7 @@ The project is plain HTML, CSS and JavaScript; no build tools, server or API key
 ### Change the chapter timer
 At the top of `script.js`, edit:
 `const CHAPTER_SECONDS = new URLSearchParams(location.search).has("test") ? 15 : 300;`
-`180` means three minutes. Keep `15` as the testing duration if useful.
+`300` means three-minutes. Keep `15` as the testing duration if useful.
 
 ### Add your own actor recordings
 The current voice option uses the browser's built-in speech synthesis. It is a temporary narration feature, not a real actor recording. To use actor recordings, add licensed/consented `.mp3` or `.ogg` files to `assets/audio/` and update the scene renderer in `script.js` to play them. Get clear permission from performers before publishing their voices.
@@ -67,6 +67,3 @@ Each chapter has three `choices`. Each choice has:
 
 ## Credits
 Project scaffold: THEATRE/LAB. Adaptation concept inspired by *The Gods Are Not to Blame* by Ola Rotimi. All newly written website text is original.
-
-## Pacing controls
-Each chapter has a **Pause** button and a **Skip to decision** button, available at any time. To delay the skip button, set `MIN_READ_SECONDS` at the top of `script.js` (0 = immediately). Keys **1 / 2 / 3** select a choice. The logo returns to the intro without erasing progress; **Restart** asks for confirmation.

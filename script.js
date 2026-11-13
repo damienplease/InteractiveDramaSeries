@@ -1,8 +1,7 @@
 /* THEATRE/LAB — original branching adaptation prototype.
-   Default chapter duration: three minutes (readers can skip ahead at any time). For quick local testing append ?test=1 to the URL. */
+   Default chapter duration: three minutes. For quick local testing append ?test=1 to the URL. */
 const CHAPTER_SECONDS = new URLSearchParams(location.search).has("test") ? 15 : 180;
 const STORAGE_KEY = "theatreLabGodsStoryV3";
-const MIN_READ_SECONDS = 0; // seconds before the skip button appears (0 = available immediately)
 const chapters = [
  {name:"The Warning",label:"CHAPTER I · THE WARNING",title:"A prophecy enters the palace.",body:[
   "Kutuje is a kingdom built on ceremony, memory and the belief that its rulers stand between the people and disorder. One evening, the royal household receives a warning about the future of its family. The words are incomplete, but their meaning frightens the court.",
@@ -131,12 +130,12 @@ function renderScene(){
  const heading=variant?variant.sub:c.title;
  const paragraphs=[...c.body];if(variant)paragraphs.push(variant.extra);
  $("sceneContent").innerHTML=`<p class="eyebrow">${c.label}</p><h2>${heading}</h2>${paragraphs.map(p=>`<p class="scene-text">${p}</p>`).join("")}<p class="character-line">“${c.voice}”</p>`;
- $("choiceArea").classList.add("hidden");$("continueButton").classList.add("hidden");$("readyButton").classList.remove("hidden");$("pauseButton").classList.remove("hidden");$("pauseButton").textContent="Pause";
- state.seconds=CHAPTER_SECONDS;state.paused=false;updateTimer();renderChapters();save();startTimer();if(voiceOn)speak([...paragraphs,c.voice].join(" "));transitionScene();
+ $("choiceArea").classList.add("hidden");$("continueButton").classList.add("hidden");
+ state.seconds=CHAPTER_SECONDS;state.paused=false;updateTimer();renderChapters();save();startTimer();if(voiceOn)speak(c.voice);transitionScene();
 }
-function transitionScene(){const panel=$("scenePanel");panel.classList.remove("scene-panel");void panel.offsetWidth;panel.classList.add("scene-panel");const h=$("sceneContent").querySelector("h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
+function transitionScene(){const panel=$("scenePanel");panel.classList.remove("scene-panel");void panel.offsetWidth;panel.classList.add("scene-panel")}
 function updateTimer(){const m=String(Math.floor(state.seconds/60)).padStart(2,"0"),s=String(state.seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;$("timerHint").textContent=CHAPTER_SECONDS===15?"TEST MODE · 15 seconds per chapter":"A decision appears when the chapter ends."}
-function startTimer(){clearInterval(timerId);timerId=setInterval(()=>{if(state.paused||state.ended)return;state.seconds--;updateTimer();if(CHAPTER_SECONDS-state.seconds>=MIN_READ_SECONDS)$("readyButton").classList.remove("hidden");if(state.seconds<=0)pauseForChoice()},1000)}
+function startTimer(){clearInterval(timerId);timerId=setInterval(()=>{if(state.paused||state.ended)return;state.seconds--;updateTimer();if(state.seconds<=0)pauseForChoice()},1000)}
 function getAvailableChoices(){
  const c=chapters[state.chapter],s=state.stats;
  // Previous decisions unlock different responses in later chapters.
@@ -146,9 +145,9 @@ function getAvailableChoices(){
   {title:"Ask the elders",desc:"Invite those who remember the past to speak.",tag:"ELDERS",effects:{wisdom:2,community:1},branch:"elders"}
  ];
  if(state.chapter===3 && s.compassion>0) return [
-  {title:"Honour those who cared for them",desc:"Let gratitude and mercy shape how the young person sees the past.",tag:"MERCY",effects:{compassion:2,trust:1},branch:"mercy"},
-  {title:"Hold kindness and honesty together",desc:"Ask hard questions about the past without turning against those who cared for them.",tag:"BALANCE",effects:{wisdom:1,courage:1},branch:"balance"},
-  {title:"Listen to the community",desc:"Learn from the people around them and what they need.",tag:"COMMUNITY",effects:{community:2,openness:1},branch:"people"}
+  {title:"Lead with care",desc:"Make room for mercy as well as justice.",tag:"MERCY",effects:{compassion:2,trust:1},branch:"mercy"},
+  {title:"Set firm boundaries",desc:"Show that kindness and accountability can coexist.",tag:"BALANCE",effects:{wisdom:1,courage:1},branch:"balance"},
+  {title:"Hear the people",desc:"Ask the community what it needs from its new ruler.",tag:"COMMUNITY",effects:{community:2,openness:1},branch:"people"}
  ];
  if(state.chapter===7 && s.community>=2) return [
   {title:"Open a public inquiry",desc:"Let the community contribute to uncovering the past.",tag:"PUBLIC INQUIRY",effects:{community:2,truth:1},branch:"inquiry"},
@@ -162,18 +161,12 @@ function getAvailableChoices(){
  ];
  return c.choices;
 }
-function questionFor(){const s=state.stats,c=chapters[state.chapter];
- if(state.chapter===3&&s.secrecy>s.openness)return"How should the young person respond to the silence around their past?";
- if(state.chapter===3&&s.compassion>0)return"How should the care they received shape who they become?";
- if(state.chapter===7&&s.community>=2)return"How should the community help uncover the truth?";
- if(state.chapter===7&&s.secrecy>=2)return"How should the palace deal with what has been kept hidden?";
- return c.question}
-function pauseForChoice(){state.paused=true;clearInterval(timerId);$("readyButton").classList.add("hidden");$("pauseButton").classList.add("hidden");if("speechSynthesis"in window)speechSynthesis.cancel();const c=chapters[state.chapter],available=getAvailableChoices();$("timer").textContent="DECIDE";$("choiceQuestion").textContent=questionFor();$("choices").innerHTML=available.map((ch,i)=>`<button class="choice-card" data-choice="${i}"><strong>${ch.title}</strong><span>${ch.desc}</span><small>${ch.tag} ↗</small></button>`).join("");$("choices").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>choose(Number(b.dataset.choice))));$("choiceArea").classList.remove("hidden");$("sceneStatus").textContent="YOUR DECISION";save();$("choiceArea").scrollIntoView({behavior:"smooth",block:"nearest"});$("choiceQuestion").focus({preventScroll:true})}
+function pauseForChoice(){state.paused=true;clearInterval(timerId);$("skipButton").classList.add("hidden");if("speechSynthesis"in window)speechSynthesis.cancel();const c=chapters[state.chapter],available=getAvailableChoices();$("timer").textContent="DECIDE";$("choiceQuestion").textContent=c.question;$("choices").innerHTML=available.map((ch,i)=>`<button class="choice-card" data-choice="${i}"><strong>${ch.title}</strong><span>${ch.desc}</span><small>${ch.tag} ↗</small></button>`).join("");$("choices").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>choose(Number(b.dataset.choice))));$("choiceArea").classList.remove("hidden");$("sceneStatus").textContent="YOUR DECISION";save();$("choiceArea").scrollIntoView({behavior:"smooth",block:"nearest"})}
 function choose(index){
  const c=chapters[state.chapter],choice=getAvailableChoices()[index];
  state.choices.push({chapter:state.chapter,title:choice.title,tag:choice.tag,branch:choice.branch});
  state.branchHistory.push(choice.branch);Object.entries(choice.effects).forEach(([k,v])=>state.stats[k]=(state.stats[k]||0)+v);save();
- $("choiceArea").classList.add("hidden");if(choice.ending){finish(choice.ending);return}
+ $("choiceArea").classList.add("hidden");$("skipButton").classList.add("hidden");if(choice.ending){finish(choice.ending);return}
  state.chapter++;$("sceneStatus").textContent="CHOICE RECORDED";$("sceneContent").insertAdjacentHTML("beforeend",`<p class="scene-text" style="color:#d2ad76">Your choice — ${choice.title} — has been recorded. It will influence later scenes.</p>`);$("continueButton").classList.remove("hidden");renderChapters();$("progressBar").style.width=`${(state.chapter/12)*100}%`;$("timer").textContent="READY";state.paused=true;save();if(voiceOn)speak(`Your choice: ${choice.title}. Continue when you are ready.`);
 }
 function finish(key){
@@ -184,12 +177,11 @@ function finish(key){
 function dominantThemes(){const s=state.stats;const pairs=[["Courage",s.courage],["Openness",s.openness],["Secrecy",s.secrecy],["Tradition",s.tradition],["Compassion",s.compassion],["Wisdom",s.wisdom],["Pride",s.pride],["Community",s.community],["Truth-seeking",s.truth],["Fatalism",s.fatalism]];return pairs.sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>0).slice(0,3).map(x=>x[0])}
 function renderReport(){
  const themes=dominantThemes();$("storyProfile").innerHTML=`<div><strong>Ending:</strong> ${endings[state.endingKey].title}</div><div><strong>Decisions:</strong> ${state.choices.length} of 12</div><div><strong>Strongest themes:</strong> ${themes.length?themes.join(", "):"A mixed path"}</div><div><strong>Route:</strong> ${state.choices.map(c=>c.tag).join(" → ")}</div>`;
- $("decisionReview").innerHTML=`<strong>Your ${state.choices.length} decisions</strong><br>${state.choices.map((c,i)=>`${i+1}. Chapter ${c.chapter+1} — ${chapters[c.chapter].name}: <strong>${c.title}</strong>`).join("<br>")}`;
+ $("decisionReview").innerHTML=`<strong>Your six decisions</strong><br>${state.choices.map((c,i)=>`${i+1}. Chapter ${c.chapter+1} — ${chapters[c.chapter].name}: <strong>${c.title}</strong>`).join("<br>")}`;
 }
 function reportText(){const themes=dominantThemes();return `THE GODS ARE NOT TO BLAME — MY STORY REPORT\n\nEnding: ${endings[state.endingKey].title}\n${endings[state.endingKey].copy}\n\nMy decisions:\n${state.choices.map((c,i)=>`${i+1}. ${chapters[c.chapter].name}: ${c.title} (${c.tag})`).join("\n")}\n\nThemes most reflected in my choices: ${themes.join(", ")||"A mixed path"}\n\nAudience reflection: ${endings[state.endingKey].question}\n\nThis is an original educational adaptation inspired by Ola Rotimi's play. It is not a reproduction of the original script.`}
 function start(){ $("intro").classList.add("hidden");$("ending").classList.add("hidden");$("story").classList.remove("hidden");if(!load())state=freshState();if(state.chapter>0&&state.choices.length){state.chapter=Math.min(state.chapter,11);renderScene()}else renderScene();window.scrollTo({top:0,behavior:"smooth"})}
 function restart(){clearInterval(timerId);if("speechSynthesis"in window)speechSynthesis.cancel();localStorage.removeItem(STORAGE_KEY);state=freshState();$("ending").classList.add("hidden");$("story").classList.add("hidden");$("intro").classList.remove("hidden");$("beginButton").textContent="Enter the story";window.scrollTo({top:0,behavior:"smooth"})}
-function goHome(){state.paused=true;clearInterval(timerId);if("speechSynthesis"in window)speechSynthesis.cancel();$("story").classList.add("hidden");$("ending").classList.add("hidden");$("intro").classList.remove("hidden");if(state.choices.length&&!state.ended)$("beginButton").textContent="Continue your story →";window.scrollTo({top:0,behavior:"smooth"})}
 function speak(text){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.rate=.88;utterance.pitch=.9;utterance.volume=.9;const voices=speechSynthesis.getVoices();const preferred=voices.find(v=>/en-GB|en-GH|en-NG|en-ZA/i.test(v.lang))||voices.find(v=>v.lang.startsWith("en"));if(preferred)utterance.voice=preferred;speechSynthesis.speak(utterance)}
 function toggleVoice(){voiceOn=!voiceOn;$("voiceToggle").setAttribute("aria-pressed",String(voiceOn));$("voiceToggle").innerHTML=`◖ <span>Voice ${voiceOn?"on":"off"}</span>`;if(!voiceOn&&"speechSynthesis"in window)speechSynthesis.cancel();else if(voiceOn&&!$("story").classList.contains("hidden"))speak(chapters[state.chapter].voice)}
 function toggleSound(){
@@ -199,9 +191,5 @@ function toggleSound(){
   [55,82.4,110].forEach((freq,i)=>{const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type=i===1?"triangle":"sine";osc.frequency.value=freq;gain.gain.value=i===0?.5:.18;osc.connect(gain);gain.connect(master);osc.start();ambientNodes.push(osc)});
  }catch(e){$("audioToggle").innerHTML="♫ <span>Sound unavailable</span>"}
 }
-$("beginButton").addEventListener("click",start);$("continueButton").addEventListener("click",()=>renderScene());$("restartTop").addEventListener("click",()=>{if(!state.choices.length||confirm("Restart the story? Your saved progress will be cleared."))restart()});$("brandHome").addEventListener("click",e=>{e.preventDefault();goHome()});$("playAgain").addEventListener("click",restart);$("resetProgress").addEventListener("click",()=>{if(confirm("Clear your saved story and start again?"))restart()});$("showChoices").addEventListener("click",()=> $("decisionReview").classList.toggle("hidden"));$("downloadReport").addEventListener("click",()=>{const blob=new Blob([reportText()],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="my-theatre-lab-story-report.txt";a.click();URL.revokeObjectURL(url)});$("audioToggle").addEventListener("click",toggleSound);$("voiceToggle").addEventListener("click",toggleVoice);
-if(load())$("beginButton").textContent="Continue your story →";
-
-$("readyButton").addEventListener("click",pauseForChoice);
-$("pauseButton").addEventListener("click",()=>{if(state.ended)return;state.paused=!state.paused;$("pauseButton").textContent=state.paused?"Resume":"Pause"});
-document.addEventListener("keydown",e=>{if($("choiceArea").classList.contains("hidden")||!["1","2","3"].includes(e.key))return;const b=$("choices").children[Number(e.key)-1];if(b)b.click()});
+$("beginButton").addEventListener("click",start);$("skipButton").addEventListener("click",pauseForChoice);$("continueButton").addEventListener("click",()=>renderScene());$("restartTop").addEventListener("click",restart);$("brandHome").addEventListener("click",e=>{e.preventDefault();restart()});$("playAgain").addEventListener("click",restart);$("resetProgress").addEventListener("click",()=>{if(confirm("Clear your saved story and start again?"))restart()});$("showChoices").addEventListener("click",()=> $("decisionReview").classList.toggle("hidden"));$("downloadReport").addEventListener("click",()=>{const blob=new Blob([reportText()],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="my-theatre-lab-story-report.txt";a.click();URL.revokeObjectURL(url)});$("audioToggle").addEventListener("click",toggleSound);$("voiceToggle").addEventListener("click",toggleVoice);
+if(load()){$("beginButton").textContent="Continue your story →";$("beginButton").addEventListener("click",()=>{ $("intro").classList.add("hidden");$("story").classList.remove("hidden");renderScene()},{once:true})}
