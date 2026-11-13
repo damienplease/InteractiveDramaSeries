@@ -67,3 +67,6 @@ Each chapter has three `choices`. Each choice has:
 
 ## Credits
 Project scaffold: THEATRE/LAB. Adaptation concept inspired by *The Gods Are Not to Blame* by Ola Rotimi. All newly written website text is original.
+
+## Pacing controls
+Readers can **Pause** a chapter, and an **I'm ready to decide** button appears after `MIN_READ_SECONDS` (top of `script.js`; 45 seconds, or 5 in test mode). Delete the `readyButton` line in `index.html` if you want strict five-minute chapters. Keys **1 / 2 / 3** select a choice. The logo now returns to the intro without erasing progress; **Restart** asks for confirmation.
