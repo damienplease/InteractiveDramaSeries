@@ -1,8 +1,8 @@
 /* THEATRE/LAB — original branching adaptation prototype.
-   Default chapter duration: five minutes. For quick local testing append ?test=1 to the URL. */
-const CHAPTER_SECONDS = new URLSearchParams(location.search).has("test") ? 15 : 300;
+   Default chapter duration: three minutes (readers can skip ahead at any time). For quick local testing append ?test=1 to the URL. */
+const CHAPTER_SECONDS = new URLSearchParams(location.search).has("test") ? 15 : 180;
 const STORAGE_KEY = "theatreLabGodsStoryV3";
-const MIN_READ_SECONDS = CHAPTER_SECONDS === 15 ? 5 : 45; // "I'm ready to decide" appears after this long
+const MIN_READ_SECONDS = 0; // seconds before the skip button appears (0 = available immediately)
 const chapters = [
  {name:"The Warning",label:"CHAPTER I · THE WARNING",title:"A prophecy enters the palace.",body:[
   "Kutuje is a kingdom built on ceremony, memory and the belief that its rulers stand between the people and disorder. One evening, the royal household receives a warning about the future of its family. The words are incomplete, but their meaning frightens the court.",
@@ -131,7 +131,7 @@ function renderScene(){
  const heading=variant?variant.sub:c.title;
  const paragraphs=[...c.body];if(variant)paragraphs.push(variant.extra);
  $("sceneContent").innerHTML=`<p class="eyebrow">${c.label}</p><h2>${heading}</h2>${paragraphs.map(p=>`<p class="scene-text">${p}</p>`).join("")}<p class="character-line">“${c.voice}”</p>`;
- $("choiceArea").classList.add("hidden");$("continueButton").classList.add("hidden");$("readyButton").classList.add("hidden");$("pauseButton").classList.remove("hidden");$("pauseButton").textContent="Pause";
+ $("choiceArea").classList.add("hidden");$("continueButton").classList.add("hidden");$("readyButton").classList.remove("hidden");$("pauseButton").classList.remove("hidden");$("pauseButton").textContent="Pause";
  state.seconds=CHAPTER_SECONDS;state.paused=false;updateTimer();renderChapters();save();startTimer();if(voiceOn)speak([...paragraphs,c.voice].join(" "));transitionScene();
 }
 function transitionScene(){const panel=$("scenePanel");panel.classList.remove("scene-panel");void panel.offsetWidth;panel.classList.add("scene-panel");const h=$("sceneContent").querySelector("h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
